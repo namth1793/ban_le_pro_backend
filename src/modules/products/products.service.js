@@ -117,6 +117,47 @@ class ProductsService {
       orderBy: { expiryDate: 'asc' }
     });
   }
+
+  async bulkCreate(rows, shopId) {
+    let created = 0;
+    let skipped = 0;
+    const errors = [];
+
+    for (const row of rows) {
+      try {
+        const code = row.code || `SP${Date.now()}${Math.random().toString(36).slice(2, 5).toUpperCase()}`;
+
+        const existing = await prisma.product.findFirst({
+          where: { shopId, code, deletedAt: null }
+        });
+        if (existing) {
+          skipped++;
+          continue;
+        }
+
+        await prisma.product.create({
+          data: {
+            code,
+            name: row.name,
+            category: row.category || null,
+            unit: row.unit || 'cái',
+            price: row.price,
+            cost: row.cost || 0,
+            stock: row.stock || 0,
+            lowStockThreshold: row.lowStockThreshold || 10,
+            expiryDate: row.expiryDate || null,
+            shopId,
+            isActive: true
+          }
+        });
+        created++;
+      } catch (err) {
+        errors.push({ name: row.name, message: err.message });
+      }
+    }
+
+    return { created, skipped, errors };
+  }
 }
 
 module.exports = new ProductsService();

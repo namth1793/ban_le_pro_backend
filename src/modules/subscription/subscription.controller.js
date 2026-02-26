@@ -50,6 +50,16 @@ class SubscriptionController {
       next(error);
     }
   }
+
+  async confirmPayment(req, res, next) {
+    try {
+      const { planType, action } = req.body;
+      const sub = await subscriptionService.confirmPayment(req.shopId, planType, action || 'upgrade');
+      res.json({ success: true, data: sub, message: 'Xác nhận thanh toán thành công' });
+    } catch (error) {
+      next(error);
+    }
+  }
 }
 
 module.exports = new SubscriptionController();

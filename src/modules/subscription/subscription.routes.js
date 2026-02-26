@@ -7,5 +7,6 @@ router.get('/invoices', subscriptionController.getInvoices);
 router.post('/upgrade', subscriptionController.upgrade);
 router.post('/renew', subscriptionController.renew);
 router.put('/auto-renew', subscriptionController.setAutoRenew);
+router.post('/confirm-payment', subscriptionController.confirmPayment);
 
 module.exports = router;

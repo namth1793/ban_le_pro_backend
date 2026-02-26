@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const productsController = require('./products.controller');
+const { upload } = require('./products.controller');
 const { authorize } = require('../../middleware/auth');
 
 // Staff can view products
@@ -11,6 +12,7 @@ router.get('/:id', productsController.getById);
 
 // Only owner can modify products
 router.post('/', authorize('OWNER'), productsController.create);
+router.post('/import', authorize('OWNER'), upload.single('file'), productsController.importProducts);
 router.put('/:id', authorize('OWNER'), productsController.update);
 router.delete('/:id', authorize('OWNER'), productsController.delete);
 

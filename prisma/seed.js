@@ -227,7 +227,7 @@ async function main() {
   await createOrder({ day:2, hour:9,  minute:0,  custIdx:5,    pay:'CASH',          items:[[2,5],[0,5],[8,6]]                    });
   await createOrder({ day:2, hour:10, minute:30,               pay:'CASH',          items:[[5,2],[6,2],[17,2]]                   });
   await createOrder({ day:2, hour:13, minute:0,  custIdx:12,   pay:'BANK_TRANSFER', disc:20000, items:[[20,2],[24,1],[22,3],[25,1]] });
-  await createOrder({ day:2, hour:15, minute:0,                pay:'MOMO',          items:[[34,1],[35-1,1]]                      }); // note: idx 34 = dầu ăn
+  await createOrder({ day:2, hour:15, minute:0,                pay:'MOMO',          items:[[33,1],[34,1]]                        }); // tương ớt + dầu ăn
   await createOrder({ day:2, hour:16, minute:30, custIdx:7,    pay:'CASH',          items:[[15,3],[16,20],[18,2]]                });
   await createOrder({ day:2, hour:19, minute:0,                pay:'CASH',          items:[[6,6],[5,6],[7,6]], status:'CANCELLED', note:'Khách đổi ý' });
 
