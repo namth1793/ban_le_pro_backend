@@ -1,6 +1,7 @@
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const prisma = require('../../config/database');
+const AppError = require('../../utils/AppError');
 
 class AuthService {
   async register(data) {
@@ -67,12 +68,12 @@ class AuthService {
     });
     
     if (!user || !await bcrypt.compare(password, user.password)) {
-      throw new Error('Invalid credentials');
+      throw new AppError('Email hoặc mật khẩu không đúng', 401);
     }
-    
+
     const shop = user.userShops[0]?.shop;
     if (!shop || shop.status !== 'ACTIVE') {
-      throw new Error('Shop not active');
+      throw new AppError('Cửa hàng không hoạt động', 403);
     }
     
     const token = this.generateToken(user.id, shop.id);

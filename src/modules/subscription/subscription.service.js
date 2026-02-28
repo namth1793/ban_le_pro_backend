@@ -1,4 +1,5 @@
 const prisma = require('../../config/database');
+const AppError = require('../../utils/AppError');
 
 const PLAN_NAMES = { FREE: 'Dùng thử', BASIC: 'Cơ Bản', PREMIUM: 'Nâng Cao' };
 const PLAN_PRICES = { FREE: 0, BASIC: 199000, PREMIUM: 399000 };
@@ -52,7 +53,7 @@ class SubscriptionService {
   async upgrade(shopId, planType) {
     const validPlans = ['FREE', 'BASIC', 'PREMIUM'];
     if (!validPlans.includes(planType)) {
-      throw new Error('Gói dịch vụ không hợp lệ');
+      throw new AppError('Gói dịch vụ không hợp lệ', 400);
     }
 
     // FREE plan: activate immediately
@@ -101,7 +102,7 @@ class SubscriptionService {
 
   async renew(shopId) {
     const sub = await prisma.subscription.findUnique({ where: { shopId } });
-    if (!sub) throw new Error('Không tìm thấy gói dịch vụ');
+    if (!sub) throw new AppError('Không tìm thấy gói dịch vụ', 404);
 
     // FREE plan: renew immediately
     if (sub.planType === 'FREE') {
@@ -149,7 +150,7 @@ class SubscriptionService {
   async confirmPayment(shopId, planType, action) {
     const validPlans = ['BASIC', 'PREMIUM'];
     if (!validPlans.includes(planType)) {
-      throw new Error('Gói dịch vụ không hợp lệ');
+      throw new AppError('Gói dịch vụ không hợp lệ', 400);
     }
 
     const now = new Date();

@@ -1,4 +1,5 @@
 const prisma = require('../../config/database');
+const AppError = require('../../utils/AppError');
 
 class OrdersService {
   async create(data, shopId, userId) {
@@ -13,7 +14,7 @@ class OrdersService {
       });
 
       if (!product || product.stock < item.quantity) {
-        throw new Error(`Product ${item.productId} not available`);
+        throw new AppError(`Sản phẩm không đủ hàng hoặc không tồn tại`, 400);
       }
 
       const subtotal = product.price * item.quantity;
@@ -126,7 +127,7 @@ class OrdersService {
 
   async updateStatus(id, shopId, status) {
     const order = await prisma.order.findFirst({ where: { id, shopId } });
-    if (!order) throw new Error('Không tìm thấy đơn hàng');
+    if (!order) throw new AppError('Không tìm thấy đơn hàng', 404);
     return await prisma.order.update({
       where: { id },
       data: { orderStatus: status }

@@ -1,9 +1,8 @@
 // src/middleware/errorHandler.js
 const errorHandler = (err, req, res, next) => {
-  console.error(err);
+  const statusCode = err.statusCode || 500;
+  console.error(`[${statusCode}] ${err.message || err}`);
 
-  // Default error
-  let statusCode = err.statusCode || 500;
   let message = err.message || 'Internal Server Error';
 
   // Prisma errors
